@@ -85,6 +85,25 @@ New-NetFirewallRule -DisplayName "Ping por Tailscale" -Direction Inbound -Protoc
 - Si `status` se queda en offline, en Windows y como administrador `Restart-Service Tailscale`, y volver a mirar.
 - Si la llave dice que venció o que ya se usó, Meme genera otra.
 
-## 7. Usar la gráfica
+## 7. Usar la gráfica con Ollama
 
-Cuando el ping ya funcione en los dos sentidos, dile a Meme qué programa va a usar la gráfica (por ejemplo Ollama, ComfyUI o SSH) y en qué puerto. Meme lo abre en su PC solo para la red de Tailscale y te pasa la dirección, que va a ser `100.91.193.93` con ese puerto.
+Ollama corre en la PC de Meme y se ve solo dentro de la red de Tailscale, en `http://100.91.193.93:11434` (también `http://pc-meme:11434`). El modelo que ya está es `qwen3:8b`.
+
+Probar
+
+```powershell
+Invoke-RestMethod http://100.91.193.93:11434/api/tags
+```
+
+Usarlo desde el Ollama de esta PC, sin bajar modelos aquí
+
+```powershell
+$env:OLLAMA_HOST = "http://100.91.193.93:11434"
+ollama run qwen3:8b
+```
+
+Desde código, cualquier cliente de Ollama o de la API compatible con OpenAI en `http://100.91.193.93:11434/v1`.
+
+La gráfica es una RTX 5050 Laptop con 8 GB, así que caben modelos de hasta unos 8B en Q4. Antes de bajar otro modelo con `ollama pull` en la PC de Meme, pregúntale, porque su disco está casi lleno.
+
+Si se necesita otro programa (ComfyUI, SSH), dile a Meme cuál y en qué puerto.
